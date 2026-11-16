@@ -383,12 +383,36 @@ h2 {
 }
 
 .btn--primary {
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
   color: var(--primary-fg);
+  box-shadow: 0 10px 24px -12px rgba(15, 118, 110, 0.55);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn--primary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -80%;
+  width: 46%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.38), transparent);
+  transform: skewX(-18deg);
+  transition: left 0.55s var(--ease-out);
 }
 
 .btn--primary:hover {
-  background: var(--primary-hover);
+  background: linear-gradient(135deg, #11665e 0%, var(--primary-hover) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px -12px rgba(15, 118, 110, 0.62);
+}
+
+.btn--primary:hover::after { left: 132%; }
+
+.btn--primary:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 16px -10px rgba(15, 118, 110, 0.5);
 }
 
 .btn--ghost {
@@ -399,8 +423,12 @@ h2 {
 
 .btn--ghost:hover {
   border-color: var(--primary-border);
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--primary);
 }
+
+.btn--ghost .arr { display: inline-block; margin-left: 2px; transition: transform 0.18s ease; }
+.btn--ghost:hover .arr { transform: translateY(2px); }
 
 .meta {
   margin-top: 18px;
@@ -3171,6 +3199,45 @@ body.deck-on { overflow: hidden; height: 100vh; }
   background-image: radial-gradient(rgba(23, 33, 31, 0.055) 1px, transparent 1px);
   background-size: 26px 26px;
   pointer-events: none;
+  -webkit-mask-image: radial-gradient(120% 105% at 50% 42%, #000 40%, transparent 100%);
+          mask-image: radial-gradient(120% 105% at 50% 42%, #000 40%, transparent 100%);
+  animation: grid-breathe 11s ease-in-out infinite alternate;
+}
+@keyframes grid-breathe {
+  from { opacity: 0.72; }
+  to { opacity: 1; }
+}
+
+/* 双光斑极光：缓慢漂移，营造氛围深度 */
+.h-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+}
+.h-glow--a {
+  width: 46vw;
+  height: 46vw;
+  left: 54%;
+  top: -20%;
+  background: radial-gradient(closest-side, rgba(15, 118, 110, 0.15), transparent 72%);
+  animation: glow-drift-a 26s ease-in-out infinite alternate;
+}
+.h-glow--b {
+  width: 34vw;
+  height: 34vw;
+  left: -12%;
+  bottom: -24%;
+  background: radial-gradient(closest-side, rgba(45, 212, 191, 0.12), transparent 72%);
+  animation: glow-drift-b 32s ease-in-out infinite alternate;
+}
+@keyframes glow-drift-a {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(-6%, 9%, 0) scale(1.12); }
+}
+@keyframes glow-drift-b {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(10%, -8%, 0) scale(1.08); }
 }
 
 .hero-grid {
@@ -3205,6 +3272,28 @@ body.deck-on { overflow: hidden; height: 100vh; }
   border: 1px solid var(--primary-border);
   border-radius: 4px;
 }
+.h-eyebrow__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  background: rgba(230, 242, 240, 0.85);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.h-eyebrow__tag::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ok);
+  box-shadow: 0 0 0 0 rgba(30, 138, 84, 0.35);
+  animation: live-pulse 2.4s ease-out infinite;
+}
+@keyframes live-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(30, 138, 84, 0.35); }
+  70%, 100% { box-shadow: 0 0 0 6px rgba(30, 138, 84, 0); }
+}
 .h-eyebrow__num {
   display: inline-flex;
   align-items: center;
@@ -3221,6 +3310,15 @@ body.deck-on { overflow: hidden; height: 100vh; }
   font-weight: 700;
 }
 
+/* 标题第二行品牌渐变 */
+.h-grad {
+  background: linear-gradient(105deg, #0b5f58 0%, var(--primary) 34%, #0d9488 68%, #2dd4bf 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
 .h-lead {
   margin: 0 0 30px;
   font-size: 15px;
@@ -3228,7 +3326,45 @@ body.deck-on { overflow: hidden; height: 100vh; }
   color: var(--fg-muted);
 }
 
-.h-actions { display: flex; gap: 12px; margin: 0 0 26px; }
+.h-actions { display: flex; gap: 12px; margin: 0 0 24px; }
+
+/* 首屏数字统计条：滚动计数 */
+.h-stats {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  justify-content: start;
+  gap: clamp(18px, 2.2vw, 32px);
+  margin: 0 0 26px;
+  padding: 13px 0 12px;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.h-stat { display: flex; flex-direction: column; gap: 3px; }
+.h-stat b {
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--fg);
+  font-family: var(--mono);
+}
+.h-stat span {
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--fg-subtle);
+  white-space: nowrap;
+}
+@media (max-width: 640px) {
+  .h-stats {
+    grid-template-columns: repeat(2, auto);
+    row-gap: 12px;
+    column-gap: 28px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .h-stat b { font-size: 17px; }
+  .h-stat span { font-size: 9.5px; }
+}
 
 /* 窄屏按钮不挤换行：允许换行排列，单按钮保持一行文字 */
 @media (max-width: 480px) {
@@ -3236,7 +3372,28 @@ body.deck-on { overflow: hidden; height: 100vh; }
   .btn { white-space: nowrap; }
 }
 
-.h-meta { margin: 0; font-size: 11.5px; color: var(--fg-subtle); letter-spacing: 0.04em; }
+.h-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+}
+.h-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3.5px 10px;
+  font-size: 10.5px;
+  letter-spacing: 0.05em;
+  color: var(--fg-muted);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.h-badge b { color: var(--primary); font-weight: 700; }
 
 .h-visual { position: relative; }
 
@@ -3258,14 +3415,31 @@ body.deck-on { overflow: hidden; height: 100vh; }
   will-change: transform;
 }
 
+/* 演示窗口入场：从更大的侧倾角回落到静态基线 */
+.screen.is-active .win--hero {
+  animation: hero-win-in 0.9s var(--ease-out) 0.25s both;
+}
+@keyframes hero-win-in {
+  from {
+    transform: perspective(1400px) rotateY(-15deg) rotateX(4deg) translateY(28px);
+    opacity: 0.35;
+  }
+  to {
+    transform: perspective(1400px) rotateY(-4deg) rotateX(1deg);
+    opacity: 1;
+  }
+}
+
 .h-chip {
   position: absolute;
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 9px 14px;
-  background: #fff;
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(215, 224, 222, 0.9);
   border-radius: 10px;
   box-shadow: 0 18px 40px -22px rgba(23, 33, 31, 0.45);
   font-size: 11.5px;
@@ -3446,6 +3620,13 @@ body[data-mode='flow'] .ghost { display: none; }
 
 @media (max-width: 900px) {
   .deck-viewport { margin-left: 0; }
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    padding-top: 84px;
+    padding-bottom: 64px;
+  }
+  .screen--hero .win--hero { margin: 0 auto; }
   .beat {
     grid-template-columns: 1fr;
     gap: 26px;
@@ -3469,7 +3650,9 @@ body[data-mode='flow'] .ghost { display: none; }
   .deck { transition: none !important; }
   .screen-inner { transition: none !important; }
   .fx, .fx-r { transition-duration: 0.001ms !important; transition-delay: 0ms !important; }
-  .h-chip--a, .h-chip--b, .scrollhint i { animation: none !important; }
+  .h-chip--a, .h-chip--b, .scrollhint i, .h-glow--a, .h-glow--b { animation: none !important; }
+  .screen--hero::after, .h-eyebrow__tag::before, .screen.is-active .win--hero { animation: none !important; }
+  .btn--primary::after { display: none; }
 }
 
 </style>
@@ -3527,20 +3710,34 @@ body[data-mode='flow'] .ghost { display: none; }
 
         <!-- ============ 00 概览 ============ -->
         <section class="screen screen--hero is-active" id="hero" data-section="hero">
+          <div class="h-glow h-glow--a" aria-hidden="true"></div>
+          <div class="h-glow h-glow--b" aria-hidden="true"></div>
           <div class="screen-inner hero-grid">
             <div class="h-copy">
               <p class="h-eyebrow fx" style="--i: 0"><span class="h-eyebrow__tag">RFERP</span>面向小微工厂的进销存与批次追溯</p>
-              <h1 class="fx" style="--i: 1">仁风仓库<br />管理系统</h1>
+              <h1 class="fx" style="--i: 1">仁风仓库<br /><span class="h-grad">管理系统</span></h1>
               <p class="h-lead fx" style="--i: 2">
                 零件、产品、BOM、批次、库存，一间小厂的全部家当，<br />一个系统管完。每笔出入库都留痕，每个批次都能追到原料。
               </p>
-              <div class="h-actions fx" style="--i: 3">
+              <div class="h-stats fx" style="--i: 3">
+                <div class="h-stat"><b><span data-count="8">0</span></b><span>功能模块</span></div>
+                <div class="h-stat"><b><span data-count="7">0</span></b><span>类角色权限</span></div>
+                <div class="h-stat"><b><span data-count="2">0</span></b><span>数据库引擎</span></div>
+                <div class="h-stat"><b><span data-count="100">0</span>%</b><span>数据本地留存</span></div>
+              </div>
+              <div class="h-actions fx" style="--i: 4">
                 <a class="btn btn--primary" href="https://github.com/LzYita/RFERP/releases/latest" target="_blank" rel="noreferrer">
                   下载最新版
                 </a>
-                <a class="btn btn--ghost" href="#catalog" data-go="1">查看功能</a>
+                <a class="btn btn--ghost" href="#catalog" data-go="1">查看功能 <span class="arr">↓</span></a>
               </div>
-              <p class="h-meta fx" style="--i: 4">Windows 10 / 11 · 单机 SQLite / 多机 MySQL · 中文界面 · 最新 <b data-app-version>v2.0.0</b></p>
+              <p class="h-meta fx" style="--i: 5">
+                <span class="h-badge">Windows 10 / 11</span>
+                <span class="h-badge">单机 SQLite</span>
+                <span class="h-badge">多机 MySQL</span>
+                <span class="h-badge">中文界面</span>
+                <span class="h-badge">最新 <b data-app-version>v2.1.1</b></span>
+              </p>
             </div>
 
             <div class="h-visual fx-r" style="--i: 2">
@@ -3549,7 +3746,7 @@ body[data-mode='flow'] .ghost { display: none; }
                 <div class="win__bar">
                   <span class="win__dots"><i></i><i></i><i></i></span>
                   <span class="win__title">RFERP · 工作台</span>
-                  <span class="win__right"><span data-app-version>v2.0.0</span> · 管理员</span>
+                  <span class="win__right"><span data-app-version>v2.1.1</span> · 管理员</span>
                 </div>
                 <div class="win__body">
                   <div class="mnav" data-nav="dashboard"></div>
@@ -3608,6 +3805,8 @@ body[data-mode='flow'] .ghost { display: none; }
                     <div class="mline"><span><b class="mono">M003</b> 塑料外壳</span><span class="muted">库存 90</span><span class="muted"><i class="badge badge--warn">低库存</i></span></div>
                     <div class="mline"><span><b class="mono">M004</b> 加热盘</span><span class="muted">库存 60</span><span class="muted"><i class="badge badge--warn">低库存</i></span></div>
                     <div class="mline"><span><b class="mono">M006</b> 加热管</span><span class="muted">库存 120</span></div>
+                    <div class="mline"><span><b class="mono">M007</b> 温控探头</span><span class="muted">库存 150</span></div>
+                    <div class="mline"><span><b class="mono">M008</b> 电源线束</span><span class="muted">库存 160</span></div>
                   </div>
                   <div class="mpanel" data-mpanel="bom">
                     <div class="mhead"><strong>BOM 管理</strong><span class="mhead__spacer"></span><span class="mlink" data-go="2">看功能介绍 ↘</span></div>
@@ -4172,7 +4371,7 @@ body[data-mode='flow'] .ghost { display: none; }
             <h2 class="fx" style="--i: 1">现在，把仓库管起来</h2>
             <p class="h-lead fx" style="--i: 2">
               Windows 10 / 11（64 位）。安装包自带运行时；缺少 WebView2 时会在首次启动引导安装。<br />
-              更新包使用 Ed25519 签名校验，验签不过不会安装。最新版本 <b data-app-version>v2.0.1</b>
+              更新包使用 Ed25519 签名校验，验签不过不会安装。最新版本 <b data-app-version>v2.1.1</b>
             </p>
             <div class="h-actions fx" style="--i: 3">
               <a class="btn btn--primary" data-dl="exe" href="https://github.com/LzYita/RFERP/releases/latest">下载安装包</a>
@@ -4619,6 +4818,48 @@ function heroCounts() {
     animateNumber(el, Number(el.dataset.count));
   });
 }
+
+/* hero 演示窗口鼠标视差：指针设备且未开启减动效时启用，rAF 插值平滑回落 */
+(() => {
+  const visual = document.querySelector('.h-visual');
+  const win = visual?.querySelector('.win--hero');
+  if (!visual || !win) return;
+  if (!matchMedia('(pointer: fine)').matches) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const BASE = { ry: -4, rx: 1 };
+  const target = { ry: 0, rx: 0 };
+  const cur = { ry: 0, rx: 0 };
+  let raf = 0;
+  const apply = () => {
+    win.style.transform = `perspective(1400px) rotateY(${(BASE.ry + cur.ry).toFixed(3)}deg) rotateX(${(BASE.rx + cur.rx).toFixed(3)}deg)`;
+  };
+  const step = () => {
+    cur.ry += (target.ry - cur.ry) * 0.09;
+    cur.rx += (target.rx - cur.rx) * 0.09;
+    apply();
+    if (Math.abs(target.ry - cur.ry) + Math.abs(target.rx - cur.rx) > 0.004) {
+      raf = requestAnimationFrame(step);
+    } else {
+      raf = 0;
+    }
+  };
+  const kick = () => {
+    if (!raf) raf = requestAnimationFrame(step);
+  };
+  visual.addEventListener('mousemove', (e) => {
+    const r = visual.getBoundingClientRect();
+    const nx = (e.clientX - r.left) / r.width - 0.5;
+    const ny = (e.clientY - r.top) / r.height - 0.5;
+    target.ry = nx * 7;
+    target.rx = -ny * 5;
+    kick();
+  });
+  visual.addEventListener('mouseleave', () => {
+    target.ry = 0;
+    target.rx = 0;
+    kick();
+  });
+})();
 
 /* ---------------- 整屏代理引擎 ---------------- */
 
