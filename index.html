@@ -3562,6 +3562,49 @@ body.deck-on { overflow: hidden; height: 100vh; }
   font-size: 11.5px;
   color: var(--fg-muted);
 }
+
+/* 联系页：全量内容 / 定制化内容 双卡片 */
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  width: min(920px, 100%);
+  margin: 8px 0 0;
+  text-align: left;
+}
+.contact-card {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 22px 24px 20px;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.contact-card__kicker {
+  margin: 0;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  color: var(--primary);
+}
+.contact-card h3 {
+  margin: 0;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+}
+.contact-card__desc {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.85;
+  color: var(--fg-muted);
+}
+.contact-card__links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; padding-top: 8px; }
+.contact-card__links .btn { height: 36px; font-size: 12.5px; }
+@media (max-width: 900px) {
+  .contact-grid { grid-template-columns: 1fr; }
+}
 .h-foot {
   position: absolute;
   left: 0;
@@ -3689,8 +3732,7 @@ body[data-mode='flow'] .ghost { display: none; }
           <a href="#backup" data-target="backup" data-go="12">备份与存储</a>
         </nav>
         <a href="#download" data-target="download" data-go="13">试用版下载</a>
-        <a href="#pricing" data-target="pricing" data-go="14">价格说明</a>
-        <a href="#contact" data-target="contact" data-go="15">联系我们</a>
+        <a href="#contact" data-target="contact" data-go="14">联系我们</a>
       </nav>
       <div class="side-nav__foot">
         <p>Windows 10 / 11 · 64 位</p>
@@ -3707,7 +3749,6 @@ body[data-mode='flow'] .ghost { display: none; }
         <a href="#top" data-target="hero" class="is-active">首页</a>
         <a href="#sales" data-target="intro">产品介绍</a>
         <a href="#download" data-target="download">试用版下载</a>
-        <a href="#pricing" data-target="pricing">价格说明</a>
         <a href="#contact" data-target="contact">联系我们</a>
       </nav>
     </header>
@@ -4713,14 +4754,16 @@ body[data-mode='flow'] .ghost { display: none; }
               <span>RFERP · 仁风仓库管理系统</span>
               <span>
                 <a href="https://github.com/LzYita/RFERP" target="_blank" rel="noreferrer">GitHub</a>
-                <a href="#pricing" data-go="14">价格说明 →</a>
+                <a href="#contact" data-go="14">联系我们 →</a>
                 <a href="#top" data-go="0">回到顶部 ↑</a>
               </span>
             </footer>
           </div>
         </section>
 
-        <!-- ============ 价格说明 ============ -->
+        <!-- ============ 价格说明（暂时下线：恢复时取消本段注释，
+             并同步 侧栏/移动导航/DOT_LABELS/页脚 的 data-go 编号——
+             当前编号：下载 13、联系 14，总屏数 15） ============
         <section class="screen screen--outro" id="pricing" data-section="pricing">
           <div class="screen-inner outro-grid">
             <p class="h-eyebrow fx" style="--i: 0"><span class="h-eyebrow__num">¥</span>价格说明</p>
@@ -4745,31 +4788,46 @@ body[data-mode='flow'] .ghost { display: none; }
             </footer>
           </div>
         </section>
+        ============================================ -->
 
         <!-- ============ 联系我们 ============ -->
         <section class="screen screen--outro" id="contact" data-section="contact">
           <div class="screen-inner outro-grid">
             <p class="h-eyebrow fx" style="--i: 0"><span class="h-eyebrow__num">@</span>联系我们</p>
-            <h2 class="fx" style="--i: 1">问题与建议，都在 GitHub</h2>
+            <h2 class="fx" style="--i: 1">获取全量内容，或谈谈定制</h2>
             <p class="h-lead fx" style="--i: 2">
-              用得顺手的、不顺手的，都欢迎说一声。Bug 反馈、功能建议、部署求助，<br />
-              提个 Issue 就能找到我们；每个版本动态也会同步在 Releases。
+              全部内容都摆在明面上：源码、安装包、文档都在 GitHub 仓库。<br />
+              想要贴合自己生意形态的版本，也从这里说起。
             </p>
-            <div class="h-actions fx" style="--i: 3">
-              <a class="btn btn--primary" href="https://github.com/LzYita/RFERP/issues" target="_blank" rel="noreferrer">提 Issue 反馈</a>
-              <a class="btn btn--ghost" href="https://github.com/LzYita/RFERP/releases" target="_blank" rel="noreferrer">版本动态 ↗</a>
+            <div class="contact-grid fx" style="--i: 3">
+              <div class="contact-card">
+                <p class="contact-card__kicker">全量内容获取</p>
+                <h3>四个版本，全部免费拿走</h3>
+                <p class="contact-card__desc">
+                  制造版（全量功能）、商贸版、工贸版、试用版都在 Releases 发布；源码随仓库开放，部署与运维文档同仓维护——下载即得完整内容，不做功能锁定。
+                </p>
+                <div class="contact-card__links">
+                  <a class="btn btn--primary" data-dl="exe" href="https://github.com/LzYita/RFERP/releases/latest" target="_blank" rel="noreferrer">下载最新版</a>
+                  <a class="btn btn--ghost" href="https://github.com/LzYita/RFERP" target="_blank" rel="noreferrer">源码仓库 ↗</a>
+                </div>
+              </div>
+              <div class="contact-card">
+                <p class="contact-card__kicker">定制化内容获取</p>
+                <h3>按你的生意，改这一份系统</h3>
+                <p class="contact-card__desc">
+                  模块裁剪、单据与流程调整、局域网多机落地、价格与权限口径适配——把业务场景和期望版本写进 Issue，逐条评估、按排期交付；部署求助与使用交流同样在这里。
+                </p>
+                <div class="contact-card__links">
+                  <a class="btn btn--ghost" href="https://github.com/LzYita/RFERP/issues" target="_blank" rel="noreferrer">提定制需求 ↗</a>
+                  <a class="btn btn--ghost" href="https://github.com/LzYita/RFERP/blob/main/docs/deployment.md" target="_blank" rel="noreferrer">部署文档 ↗</a>
+                </div>
+              </div>
             </div>
-            <ul class="h-stack fx" style="--i: 4">
-              <li>Bug 反馈</li>
-              <li>功能建议</li>
-              <li>部署求助</li>
-              <li>使用交流</li>
-            </ul>
+            <p class="dl-meta fx" style="--i: 4">Bug 反馈、功能建议同样走 Issue；每个版本动态同步在 Releases。</p>
             <footer class="h-foot">
               <span>RFERP · 仁风仓库管理系统</span>
               <span>
-                <a href="https://github.com/LzYita/RFERP" target="_blank" rel="noreferrer">GitHub</a>
-                <a href="#pricing" data-go="14">← 价格说明</a>
+                <a href="#download" data-go="13">← 试用版下载</a>
                 <a href="#top" data-go="0">回到顶部 ↑</a>
               </span>
             </footer>
@@ -5211,7 +5269,7 @@ const dotsBox = document.getElementById('dots');
 const DOT_LABELS = [
   '首页',
   '销售与出库', '供应商与采购', '委外加工', '零件入库', 'BOM 管理', '生产批次', '批次追溯', '库存与成品', '财务', '操作记录', '用户与权限', '备份与存储',
-  '试用版下载', '价格说明', '联系我们',
+  '试用版下载', '联系我们',
 ];
 dotsBox.innerHTML = DOT_LABELS.map((l, i) => `<button type="button" data-i="${i}" aria-label="${l}"${i === 13 ? ' class="dot-sep"' : ''}></button>`).join('');
 const dots = [...dotsBox.children];
