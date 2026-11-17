@@ -1288,17 +1288,8 @@ h2 {
 }
 
 /* ---- 示意工作台可点击项：hover 反馈 + 手型 ---- */
-.win--hero .mnav__item { cursor: pointer; }
-.win--hero .mnav__item:hover { background: rgba(255, 255, 255, 0.08); }
-/* 侧栏 14 项：紧凑行距保证全部可见 */
-.win--hero .mnav { padding: 8px 6px; font-size: 9px; }
-.win--hero .mnav__item { padding: 3.2px 5px; }
-.win--hero .mnav__brand { padding-bottom: 6px; margin-bottom: 4px; }
-.win--hero [data-go] { cursor: pointer; }
-.stat[data-go],
-.h-chip[data-go] { transition: transform 0.15s ease, box-shadow 0.15s ease; }
-.stat[data-go]:hover,
-.h-chip[data-go]:hover {
+.stat[data-go] { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.stat[data-go]:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 14px rgba(15, 118, 110, 0.12);
 }
@@ -2624,15 +2615,6 @@ h2 {
     margin-top: 28px;
   }
 
-  .win.win--hero {
-    min-height: 190px;
-  }
-
-  /* 窄屏上两栏面板会挤成竖排单字，直接收起，只留四个数字 */
-  .win--hero .dash {
-    display: none;
-  }
-
   .scene {
     min-height: 0;
     border-top: 1px solid var(--border-subtle);
@@ -3399,64 +3381,105 @@ body.deck-on { overflow: hidden; height: 100vh; }
 }
 .h-badge b { color: var(--primary); font-weight: 700; }
 
-.h-visual { position: relative; }
-
-.h-backdrop {
-  position: absolute;
-  inset: -5% -6% 8% -3%;
-  border-radius: 26px;
-  background: linear-gradient(135deg, rgba(15, 118, 110, 0.15), rgba(45, 212, 191, 0.05) 55%, rgba(23, 33, 31, 0.03));
-  transform: rotate(-2.5deg);
-}
-
-.screen--hero .win--hero {
+/* ---- 首页右栏：业务域索引（替代演示窗口） ---- */
+.h-index {
   position: relative;
-  width: min(100%, 520px);
-  margin-left: auto;
-  transform: perspective(1400px) rotateY(-4deg) rotateX(1deg);
-  box-shadow: 0 70px 120px -55px rgba(23, 33, 31, 0.55);
-  border-radius: 12px;
-  will-change: transform;
+  width: min(100%, 470px);
+  margin-left: 0;
+  padding: 2px 0 2px 34px;
 }
-
-/* 演示窗口入场：从更大的侧倾角回落到静态基线 */
-.screen.is-active .win--hero {
-  animation: hero-win-in 0.9s var(--ease-out) 0.25s both;
-}
-@keyframes hero-win-in {
-  from {
-    transform: perspective(1400px) rotateY(-15deg) rotateX(4deg) translateY(28px);
-    opacity: 0.35;
-  }
-  to {
-    transform: perspective(1400px) rotateY(-4deg) rotateX(1deg);
-    opacity: 1;
-  }
-}
-
-.h-chip {
+.h-index::before {
+  content: '';
   position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--primary-border) 14%, var(--primary-border) 86%, transparent);
+}
+.h-index::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 70px;
+  top: -70px;
+  background: linear-gradient(to bottom, transparent, var(--primary), transparent);
+  opacity: 0;
+  animation: index-scan 8s var(--ease-inout) 1.4s infinite;
+}
+@keyframes index-scan {
+  0% { top: -70px; opacity: 0; }
+  14% { opacity: 0.8; }
+  72% { opacity: 0.8; }
+  92%, 100% { top: 100%; opacity: 0; }
+}
+
+.h-index__kicker {
+  margin: 0 0 2px;
+  font-size: 10.5px;
+  letter-spacing: 0.2em;
+  color: var(--fg-subtle);
+}
+
+.h-index__list { margin: 0; padding: 0; list-style: none; }
+
+.h-index__row {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 14px;
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(215, 224, 222, 0.9);
-  border-radius: 10px;
-  box-shadow: 0 18px 40px -22px rgba(23, 33, 31, 0.45);
-  font-size: 11.5px;
+  align-items: baseline;
+  gap: 10px;
+  padding: 15.5px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+  transition-delay: calc(240ms + var(--i, 0) * 65ms);
+}
+.h-index__row:first-child { border-top: 1px solid var(--border-subtle); }
+.screen.is-active .h-index__row { opacity: 1; transform: none; }
+
+.h-index__no {
+  flex: none;
+  width: 20px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--primary);
+  opacity: 0.5;
+  transition: opacity 0.25s ease;
+}
+.h-index__name {
+  flex: none;
+  font-size: 16px;
   font-weight: 600;
+  letter-spacing: 0.01em;
   color: var(--fg);
+  transition: color 0.25s ease;
+}
+/* 目录式点线：把名称与说明连起来，避免中间空一块 */
+.h-index__leader {
+  flex: 1 1 auto;
+  min-width: 16px;
+  align-self: center;
+  height: 0;
+  margin: 0 4px 2px;
+  border-bottom: 1px dotted rgba(23, 33, 31, 0.22);
+}
+.h-index__meta {
+  flex: none;
+  font-size: 12px;
+  color: var(--fg-subtle);
   white-space: nowrap;
 }
-.h-chip__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); }
-.h-chip--a { top: 9%; right: -8px; animation: h-float 6s ease-in-out infinite alternate; }
-.h-chip--b { bottom: 11%; left: -22px; animation: h-float 7s ease-in-out 0.9s infinite alternate-reverse; }
-@keyframes h-float {
-  from { transform: translateY(-5px); }
-  to { transform: translateY(6px); }
+.h-index__row:hover .h-index__no { opacity: 1; }
+.h-index__row:hover .h-index__name { color: var(--primary); }
+.h-index__row:hover .h-index__leader { border-bottom-color: var(--primary-border); }
+
+.h-index__foot {
+  margin: 16px 0 0;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--fg-subtle);
 }
 
 .scrollhint {
@@ -3481,6 +3504,16 @@ body.deck-on { overflow: hidden; height: 100vh; }
 @keyframes hint-sweep {
   0%, 100% { transform: scaleX(0.4); opacity: 0.5; transform-origin: left; }
   50% { transform: scaleX(1); opacity: 1; transform-origin: left; }
+}
+
+/* 流式布局（窄屏 / 减动效）下不再悬浮，随内容排在末行，避免压住右栏索引 */
+body[data-mode='flow'] .scrollhint {
+  position: static;
+  left: auto;
+  bottom: auto;
+  transform: none;
+  justify-content: center;
+  margin: 26px auto 2px;
 }
 
 /* ---- 幽灵编号 ---- */
@@ -3673,7 +3706,14 @@ body[data-mode='flow'] .ghost { display: none; }
     padding-top: 84px;
     padding-bottom: 64px;
   }
-  .screen--hero .win--hero { margin: 0 auto; }
+  .h-index {
+    width: 100%;
+    margin: 0;
+    padding-left: 20px;
+  }
+  .h-index__row { padding: 12px 0; gap: 8px; }
+  .h-index__leader { display: none; }
+  .h-index__meta { white-space: normal; text-align: right; margin-left: auto; }
   .beat {
     grid-template-columns: 1fr;
     gap: 26px;
@@ -3689,16 +3729,16 @@ body[data-mode='flow'] .ghost { display: none; }
   .beat--chain .beat__top { grid-template-columns: 1fr; gap: 26px; }
   .op { max-width: 420px; }
   .screen--hero h1 br { display: none; }
-  .h-chip--a { right: 4px; }
-  .h-chip--b { left: 4px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .deck { transition: none !important; }
   .screen-inner { transition: none !important; }
   .fx, .fx-r { transition-duration: 0.001ms !important; transition-delay: 0ms !important; }
-  .h-chip--a, .h-chip--b, .scrollhint i, .h-glow--a, .h-glow--b { animation: none !important; }
-  .screen--hero::after, .h-eyebrow__tag::before, .screen.is-active .win--hero { animation: none !important; }
+  .scrollhint i, .h-glow--a, .h-glow--b { animation: none !important; }
+  .screen--hero::after, .h-eyebrow__tag::before { animation: none !important; }
+  .h-index::after { animation: none !important; }
+  .h-index__row { transition-duration: 0.001ms !important; transition-delay: 0ms !important; }
   .btn--primary::after { display: none; }
 }
 
@@ -3789,151 +3829,48 @@ body[data-mode='flow'] .ghost { display: none; }
               </p>
             </div>
 
-            <div class="h-visual fx-r" style="--i: 2">
-              <div class="h-backdrop" aria-hidden="true"></div>
-              <div class="win win--hero" aria-hidden="true">
-                <div class="win__bar">
-                  <span class="win__dots"><i></i><i></i><i></i></span>
-                  <span class="win__title">RFERP · 工作台</span>
-                  <span class="win__right"><span data-app-version>v2.1.1</span> · 管理员</span>
-                </div>
-                <div class="win__body">
-                  <div class="mnav" data-nav="dashboard"></div>
-                <div class="mmain">
-                  <div class="mpanel is-on" data-mpanel="dashboard">
-                    
-                    <div class="mhead"><strong>工作台</strong><span class="mhead__spacer"></span><span class="mhead__meta">最后刷新 17:57:24</span></div>
-                    <div class="stats">
-                      <div class="stat" data-mswitch="parts" title="在演示中查看零件管理"><small>零件总数</small><b data-count="128">0</b></div>
-                      <div class="stat" data-mswitch="products" title="在演示中查看产品管理"><small>产品总数</small><b data-count="24">0</b></div>
-                      <div class="stat" data-mswitch="batch" title="在演示中查看批次追溯"><small>批次数</small><b data-count="36">0</b></div>
-                      <div class="stat stat--warn" data-mswitch="parts" title="在演示中查看零件管理"><small>低库存预警</small><b data-count="6">0</b></div>
-                    </div>
-                    <div class="dash">
-                      <div class="panel">
-                        <div class="panel__t">库存预警 <span>6 项</span></div>
-                        <div class="panel__row" data-mswitch="parts" title="在演示中查看零件管理"><span class="mono">M003</span><span>塑料外壳</span><b class="num">90</b><i class="badge badge--warn">低库存</i></div>
-                        <div class="panel__row" data-mswitch="parts" title="在演示中查看零件管理"><span class="mono">M004</span><span>加热盘</span><b class="num">60</b><i class="badge badge--warn">低库存</i></div>
-                        <div class="panel__row" data-mswitch="parts" title="在演示中查看零件管理"><span class="mono">M006</span><span>加热管</span><b class="num">120</b><i class="badge badge--warn">低库存</i></div>
-                        <div class="panel__row" data-mswitch="parts" title="在演示中查看零件管理"><span class="mono">M007</span><span>温控探头</span><b class="num">150</b><i class="badge badge--warn">低库存</i></div>
-                        <div class="panel__row" data-mswitch="parts" title="在演示中查看零件管理"><span class="mono">M008</span><span>电源线束</span><b class="num">160</b><i class="badge badge--warn">低库存</i></div>
-                        <div class="panel__row" data-mswitch="parts" title="在演示中查看零件管理"><span class="mono">M009</span><span>内胆涂层件</span><b class="num">140</b><i class="badge badge--warn">低库存</i></div>
-                        <div class="panel__more" data-mswitch="parts">前往零件管理 →</div>
-                      </div>
-                      <div class="panel">
-                        <div class="panel__t">最近操作</div>
-                        <div class="panel__row" data-mswitch="audit" title="在演示中查看操作记录"><span class="muted">10-20 10:20</span><span>销售 · 出库 30</span><span class="muted">销售·小周</span></div>
-                        <div class="panel__row" data-mswitch="audit" title="在演示中查看操作记录"><span class="muted">10-20 09:35</span><span>采购 · 收货 900</span><span class="muted">采购·小郑</span></div>
-                        <div class="panel__row" data-mswitch="audit" title="在演示中查看操作记录"><span class="muted">10-19 16:05</span><span>财务 · 收款 5000</span><span class="muted">财务·小陈</span></div>
-                        <div class="panel__row" data-mswitch="audit" title="在演示中查看操作记录"><span class="muted">10-19 14:05</span><span>批次 · 完工 200</span><span class="muted">生产·小王</span></div>
-                        <div class="panel__row" data-mswitch="audit" title="在演示中查看操作记录"><span class="muted">10-19 09:40</span><span>零件 · 入库 100</span><span class="muted">仓管·李四</span></div>
-                        <div class="panel__row" data-mswitch="audit" title="在演示中查看操作记录"><span class="muted">10-18 15:02</span><span>委外 · 收货 120</span><span class="muted">仓管·李四</span></div>
-                        <div class="panel__row" data-mswitch="audit" title="在演示中查看操作记录"><span class="muted">10-18 09:42</span><span>订单 · 确认 ×200</span><span class="muted">销售·小周</span></div>
-                        <div class="panel__row" data-mswitch="audit" title="在演示中查看操作记录"><span class="muted">10-18 09:22</span><span>产品 · 新增</span><span class="muted">管理员</span></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="mpanel" data-mpanel="stats">
-                    <div class="mhead"><strong>统计分析</strong><span class="mhead__spacer"></span><span class="mlink" data-go="0">回首页 ↗</span></div>
-                    <div class="mline"><span>本月出入库</span><b class="num" style="color:var(--primary)">412 笔</b></div>
-                    <div class="mline"><span>本月订单</span><b class="num">23 单</b></div>
-                    <div class="mline"><span>本月批次</span><b class="num">14 单</b></div>
-                    <div class="mline"><span>毛利趋势</span><span class="mbar"><i style="width:72%"></i></span></div>
-                    <div class="mline"><span>周转天数</span><b class="num">18 天</b></div>
-                  </div>
-                  <div class="mpanel" data-mpanel="products">
-                    <div class="mhead"><strong>产品</strong><span class="mhead__spacer"></span><span class="mlink" data-go="8">看功能介绍 ↘</span></div>
-                    <div class="mline"><span><b class="mono">AF-200</b> 空气炸锅</span><span class="muted">成品 12 · BOM 4 件</span></div>
-                    <div class="mline"><span><b class="mono">AF-210</b> 电烤箱</span><span class="muted">成品 5 · BOM 6 件</span></div>
-                    <div class="mline"><span><b class="mono">AF-180</b> 破壁机</span><span class="muted">草稿</span></div>
-                    <div class="mline"><span><b class="mono">AF-150</b> 加湿器</span><span class="muted">成品 0 · BOM 3 件</span></div>
-                  </div>
-                  <div class="mpanel" data-mpanel="parts">
-                    <div class="mhead"><strong>零件</strong><span class="mhead__spacer"></span><span class="mlink" data-go="4">看功能介绍 ↘</span></div>
-                    <div class="mline"><span><b class="mono">M001</b> 电源线</span><span class="muted">库存 200</span></div>
-                    <div class="mline"><span><b class="mono">M002</b> 温控器</span><span class="muted">库存 88</span></div>
-                    <div class="mline"><span><b class="mono">M003</b> 塑料外壳</span><span class="muted">库存 90</span><span class="muted"><i class="badge badge--warn">低库存</i></span></div>
-                    <div class="mline"><span><b class="mono">M004</b> 加热盘</span><span class="muted">库存 60</span><span class="muted"><i class="badge badge--warn">低库存</i></span></div>
-                    <div class="mline"><span><b class="mono">M006</b> 加热管</span><span class="muted">库存 120</span></div>
-                    <div class="mline"><span><b class="mono">M007</b> 温控探头</span><span class="muted">库存 150</span></div>
-                    <div class="mline"><span><b class="mono">M008</b> 电源线束</span><span class="muted">库存 160</span></div>
-                  </div>
-                  <div class="mpanel" data-mpanel="bom">
-                    <div class="mhead"><strong>BOM</strong><span class="mhead__spacer"></span><span class="mlink" data-go="5">看功能介绍 ↘</span></div>
-                    <div class="mline"><span><b class="mono">AF-200</b> 空气炸锅</span><span class="muted">由 4 种零件组成</span></div>
-                    <div class="mline"><span>├ M001 电源线</span><span class="muted">×1 · 损耗 0%</span></div>
-                    <div class="mline"><span>├ M002 温控器</span><span class="muted">×1 · 损耗 0%</span></div>
-                    <div class="mline"><span>├ M003 塑料外壳</span><span class="muted">×1 · 损耗 0%</span></div>
-                    <div class="mline"><span>└ M004 加热盘</span><span class="muted">×1 · 损耗 3%</span></div>
-                  </div>
-                  <div class="mpanel" data-mpanel="contacts">
-                    <div class="mhead"><strong>客户</strong><span class="mhead__spacer"></span><span class="mlink" data-go="1">看功能介绍 ↘</span></div>
-                    <div class="mline"><span><b class="mono">KH-1001</b> 恒达家电</span><span class="muted">在途订单 2</span></div>
-                    <div class="mline"><span><b class="mono">KH-1002</b> 明达商贸</span><span class="muted">在途订单 1</span></div>
-                    <div class="mline"><span><b class="mono">KH-1003</b> 星火电器</span><span class="muted">已完成 12 单</span></div>
-                  </div>
-                  <div class="mpanel" data-mpanel="sales">
-                    <div class="mhead"><strong>销售订单</strong><span class="mhead__spacer"></span><span class="mlink" data-go="1">看功能介绍 ↘</span></div>
-                    <div class="mline"><span><b class="mono">SO-1031</b> 恒达 AF-200 ×200</span><span class="muted">已确认</span></div>
-                    <div class="mline"><span><b class="mono">SO-1030</b> 明达 AF-210 ×80</span><span class="muted">部分发货 30/80</span></div>
-                    <div class="mline"><span><b class="mono">SO-1029</b> 星火 AF-150 ×300</span><span class="muted">报价 QT-1019 → 299</span></div>
-                    <div class="mline"><span>出库 <b class="mono">CK-1044</b></span><span class="muted">AF-200 ×30 · 批次分配 ✓</span></div>
-                  </div>
-                  <div class="mpanel" data-mpanel="suppliers">
-                    <div class="mhead"><strong>供应商</strong><span class="mhead__spacer"></span><span class="mlink" data-go="2">看功能介绍 ↘</span></div>
-                    <div class="mline"><span><b class="mono">SUP-1001</b> 不锈钢制品厂</span><span class="muted">零件报价 3 项</span></div>
-                    <div class="mline"><span><b class="mono">SUP-1002</b> 电子元件商行</span><span class="muted">零件报价 5 项</span></div>
-                    <div class="mline"><span><b class="mono">SUP-1003</b> 精工喷涂厂</span><span class="muted">可接委外</span></div>
-                  </div>
-                  <div class="mpanel" data-mpanel="purchase">
-                    <div class="mhead"><strong>采购</strong><span class="mhead__spacer"></span><span class="mlink" data-go="2">看功能介绍 ↘</span></div>
-                    <div class="mline"><span><b class="mono">PO-1031</b> 塑料外壳 ×900</span><span class="muted">部分收货 720/900</span></div>
-                    <div class="mline"><span><b class="mono">PO-1030</b> 温控器 ×1300</span><span class="muted">已收齐</span></div>
-                    <div class="mline"><span>建议采购</span><span class="muted">加热盘 缺 320 · 在途 400</span></div>
-                  </div>
-                  <div class="mpanel" data-mpanel="outsourcing">
-                    <div class="mhead"><strong>委外</strong><span class="mhead__spacer"></span><span class="mlink" data-go="3">看功能介绍 ↘</span></div>
-                    <div class="mline"><span><b class="mono">OW-0031</b> 外壳喷涂 ×200</span><span class="muted">已发料 200</span></div>
-                    <div class="mline"><span>收货 <b class="mono">RK-0061</b> ×120</span><span class="muted">成品批次已生成</span></div>
-                    <div class="mline"><span>加工费</span><span class="muted">2.5 元/件 · 已对账</span></div>
-                  </div>
-                  <div class="mpanel" data-mpanel="finance">
-                    <div class="mhead"><strong>财务</strong><span class="mhead__spacer"></span><span class="mlink" data-go="9">看功能介绍 ↘</span></div>
-                    <div class="mline"><span>应收 <b class="mono">CK-1044</b></span><span class="muted">余 8970</span></div>
-                    <div class="mline"><span>应付 <b class="mono">GR-1031</b></span><span class="muted">余 17400</span></div>
-                    <div class="mline"><span>收款 <b class="mono">SK-1052</b> 5000</span><span class="muted">核销 CK-1030 ✓</span></div>
-                    <div class="mline"><span>本月净现金流</span><b class="num" style="color:var(--primary)">+12,400</b></div>
-                  </div>
-                  <div class="mpanel" data-mpanel="batch">
-                    <div class="mhead"><strong>生产</strong><span class="mhead__spacer"></span><span class="mlink" data-go="6">看功能介绍 ↘</span></div>
-                    <div class="mline"><span><b class="mono">B-2081</b> AF-200 ×200</span><span class="muted">已完成 · 恒达家电</span></div>
-                    <div class="mline"><span><b class="mono">B-2080</b> AF-200 ×150</span><span class="muted">生产中 · 投料 ✓</span></div>
-                    <div class="mline"><span><b class="mono">B-2079</b> AF-210 ×80</span><span class="muted">待确认</span></div>
-                    <div class="mline"><span>委外 <b class="mono">OW-0031</b> 喷涂 ×200</span><span class="muted">发料即扣 · 可退料</span></div>
-                  </div>
-                  <div class="mpanel" data-mpanel="audit">
-                    <div class="mhead"><strong>操作记录</strong><span class="mhead__spacer"></span><span class="mlink" data-go="10">看功能介绍 ↘</span></div>
-                    <div class="mline"><span>10-20 10:20</span><span class="muted">销售出库 · 新增</span><span class="muted">销售·小周</span></div>
-                    <div class="mline"><span>10-20 09:35</span><span class="muted">收货单 · 确认</span><span class="muted">采购·小郑</span></div>
-                    <div class="mline"><span>10-19 14:05</span><span class="muted">零件 · 入库 100</span><span class="muted">仓管·李四</span></div>
-                    <div class="mline"><span>10-19 10:15</span><span class="muted">财务 · 收款 5000</span><span class="muted">财务·小陈</span></div>
-                    <div class="mline"><span>10-18 15:02</span><span class="muted">订单 · 状态变更</span><span class="muted">销售·小周</span></div>
-                  </div>
-                  <div class="mpanel" data-mpanel="users">
-                    <div class="mhead"><strong>用户</strong><span class="mhead__spacer"></span><span class="mlink" data-go="11">看功能介绍 ↘</span></div>
-                    <div class="mline"><span>张三</span><span class="muted">管理员</span><span class="muted"><i class="badge">全部可写</i></span></div>
-                    <div class="mline"><span>李四</span><span class="muted">仓管</span><span class="muted"><i class="badge">零件与库存</i></span></div>
-                    <div class="mline"><span>王五</span><span class="muted">生产</span><span class="muted"><i class="badge">BOM 与批次</i></span></div>
-                    <div class="mline"><span>周小</span><span class="muted">销售</span><span class="muted"><i class="badge">订单与出库</i></span></div>
-                    <div class="mline"><span>陈小</span><span class="muted">财务</span><span class="muted"><i class="badge">应收应付</i></span></div>
-                  </div>
-                  <div class="mprog" id="mprog" aria-hidden="true"></div>
-                </div>
-              </div>
-              <div class="h-chip h-chip--a" data-mswitch="sales" title="在演示中查看销售订单"><i class="h-chip__dot"></i>订单 SO-1031 · 确认 ×200 · 刚刚</div>
-              <div class="h-chip h-chip--b" data-mswitch="parts" title="在演示中查看零件管理">⚠ 低库存预警 6 项</div>
+            <div class="h-index fx-r" style="--i: 2">
+              <p class="h-index__kicker">六大业务域 · 17 个模块</p>
+              <ul class="h-index__list">
+                <li class="h-index__row" style="--i: 0">
+                  <span class="h-index__no">01</span>
+                  <span class="h-index__name">概览</span>
+                  <span class="h-index__leader" aria-hidden="true"></span>
+                  <span class="h-index__meta">工作台 · 统计分析</span>
+                </li>
+                <li class="h-index__row" style="--i: 1">
+                  <span class="h-index__no">02</span>
+                  <span class="h-index__name">销售</span>
+                  <span class="h-index__leader" aria-hidden="true"></span>
+                  <span class="h-index__meta">客户 · 报价 · 订单 · 出库</span>
+                </li>
+                <li class="h-index__row" style="--i: 2">
+                  <span class="h-index__no">03</span>
+                  <span class="h-index__name">采购</span>
+                  <span class="h-index__leader" aria-hidden="true"></span>
+                  <span class="h-index__meta">供应商 · 采购 · 委外</span>
+                </li>
+                <li class="h-index__row" style="--i: 3">
+                  <span class="h-index__no">04</span>
+                  <span class="h-index__name">生产与库存</span>
+                  <span class="h-index__leader" aria-hidden="true"></span>
+                  <span class="h-index__meta">产品 · 零件 · BOM · 生产</span>
+                </li>
+                <li class="h-index__row" style="--i: 4">
+                  <span class="h-index__no">05</span>
+                  <span class="h-index__name">财务</span>
+                  <span class="h-index__leader" aria-hidden="true"></span>
+                  <span class="h-index__meta">应收应付 · 核销 · 资金</span>
+                </li>
+                <li class="h-index__row" style="--i: 5">
+                  <span class="h-index__no">06</span>
+                  <span class="h-index__name">系统</span>
+                  <span class="h-index__leader" aria-hidden="true"></span>
+                  <span class="h-index__meta">操作记录 · 备份 · 用户</span>
+                </li>
+              </ul>
+              <p class="h-index__foot">每笔出入库与批次变更都在同一套数据里</p>
             </div>
-          </div>
           </div>
           <a class="scrollhint" href="#sales" data-go="1">
             <span>滚动查看 12 个功能</span>
@@ -5221,25 +5158,23 @@ function heroCounts() {
   });
 }
 
-/* hero 演示窗口鼠标视差：指针设备且未开启减动效时启用，rAF 插值平滑回落 */
+/* hero 业务域索引：指针悬停时给整块一点跟随位移，克制的视差 */
 (() => {
-  const visual = document.querySelector('.h-visual');
-  const win = visual?.querySelector('.win--hero');
-  if (!visual || !win) return;
+  const index = document.querySelector('.h-index');
+  if (!index) return;
   if (!matchMedia('(pointer: fine)').matches) return;
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const BASE = { ry: -4, rx: 1 };
-  const target = { ry: 0, rx: 0 };
-  const cur = { ry: 0, rx: 0 };
+  const target = { x: 0, y: 0 };
+  const cur = { x: 0, y: 0 };
   let raf = 0;
   const apply = () => {
-    win.style.transform = `perspective(1400px) rotateY(${(BASE.ry + cur.ry).toFixed(3)}deg) rotateX(${(BASE.rx + cur.rx).toFixed(3)}deg)`;
+    index.style.transform = `translate3d(${cur.x.toFixed(2)}px, ${cur.y.toFixed(2)}px, 0)`;
   };
   const step = () => {
-    cur.ry += (target.ry - cur.ry) * 0.09;
-    cur.rx += (target.rx - cur.rx) * 0.09;
+    cur.x += (target.x - cur.x) * 0.12;
+    cur.y += (target.y - cur.y) * 0.12;
     apply();
-    if (Math.abs(target.ry - cur.ry) + Math.abs(target.rx - cur.rx) > 0.004) {
+    if (Math.abs(target.x - cur.x) + Math.abs(target.y - cur.y) > 0.02) {
       raf = requestAnimationFrame(step);
     } else {
       raf = 0;
@@ -5248,17 +5183,15 @@ function heroCounts() {
   const kick = () => {
     if (!raf) raf = requestAnimationFrame(step);
   };
-  visual.addEventListener('mousemove', (e) => {
-    const r = visual.getBoundingClientRect();
-    const nx = (e.clientX - r.left) / r.width - 0.5;
-    const ny = (e.clientY - r.top) / r.height - 0.5;
-    target.ry = nx * 7;
-    target.rx = -ny * 5;
+  index.addEventListener('mousemove', (e) => {
+    const r = index.getBoundingClientRect();
+    target.x = ((e.clientX - r.left) / r.width - 0.5) * 6;
+    target.y = ((e.clientY - r.top) / r.height - 0.5) * 5;
     kick();
   });
-  visual.addEventListener('mouseleave', () => {
-    target.ry = 0;
-    target.rx = 0;
+  index.addEventListener('mouseleave', () => {
+    target.x = 0;
+    target.y = 0;
     kick();
   });
 })();
