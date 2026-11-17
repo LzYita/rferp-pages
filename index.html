@@ -3776,7 +3776,7 @@ body[data-mode='flow'] .ghost { display: none; }
       </nav>
       <div class="side-nav__foot">
         <p>Windows 10 / 11 · 64 位</p>
-        <a class="side-nav__dl" href="https://github.com/LzYita/RFERP/releases/latest" target="_blank" rel="noreferrer">
+        <a class="side-nav__dl" href="https://github.com/rf-us/RFERP/releases/latest" target="_blank" rel="noreferrer">
           下载最新版 ↗
         </a>
       </div>
@@ -3815,7 +3815,7 @@ body[data-mode='flow'] .ghost { display: none; }
                 <div class="h-stat"><b><span data-count="100">0</span>%</b><span>数据本地留存</span></div>
               </div>
               <div class="h-actions fx" style="--i: 4">
-                <a class="btn btn--primary" href="https://github.com/LzYita/RFERP/releases/latest" target="_blank" rel="noreferrer">
+                <a class="btn btn--primary" href="https://github.com/rf-us/RFERP/releases/latest" target="_blank" rel="noreferrer">
                   下载最新版
                 </a>
                 <a class="btn btn--ghost" href="#catalog" data-go="1">查看功能 <span class="arr">↓</span></a>
@@ -4675,9 +4675,9 @@ body[data-mode='flow'] .ghost { display: none; }
               更新包使用 Ed25519 签名校验，验签不过不会安装。最新版本 <b data-app-version>v2.1.1</b>
             </p>
             <div class="h-actions fx" style="--i: 3">
-              <a class="btn btn--primary" data-dl="exe" href="https://github.com/LzYita/RFERP/releases/latest">下载安装包</a>
-              <a class="btn btn--ghost" data-dl="zip" href="https://github.com/LzYita/RFERP/releases/latest">便携版 .zip</a>
-              <a class="btn btn--ghost" href="https://github.com/LzYita/RFERP/blob/main/docs/deployment.md" target="_blank" rel="noreferrer">部署与运维说明 ↗</a>
+              <a class="btn btn--primary" data-dl="exe" href="https://github.com/rf-us/RFERP/releases/latest">下载安装包</a>
+              <a class="btn btn--ghost" data-dl="zip" href="https://github.com/rf-us/RFERP/releases/latest">便携版 .zip</a>
+              <a class="btn btn--ghost" href="https://github.com/rf-us/RFERP/blob/main/docs/deployment.md" target="_blank" rel="noreferrer">部署与运维说明 ↗</a>
             </div>
             <p class="dl-meta fx" style="--i: 4">安装包约 <b data-dl-size="exe">7</b> MB · 便携版约 <b data-dl-size="zip">7</b> MB · 点击即下载，不跳转页面</p>
             <ul class="h-stack fx" style="--i: 5">
@@ -4690,7 +4690,7 @@ body[data-mode='flow'] .ghost { display: none; }
             <footer class="h-foot">
               <span>RFERP · 仁风仓库管理系统</span>
               <span>
-                <a href="https://github.com/LzYita/RFERP" target="_blank" rel="noreferrer">GitHub</a>
+                <a href="https://github.com/rf-us/RFERP" target="_blank" rel="noreferrer">GitHub</a>
                 <a href="#contact" data-go="14">联系我们 →</a>
                 <a href="#top" data-go="0">回到顶部 ↑</a>
               </span>
@@ -4744,8 +4744,8 @@ body[data-mode='flow'] .ghost { display: none; }
                   制造版（全量功能）、商贸版、工贸版、试用版都在 Releases 发布；源码随仓库开放，部署与运维文档同仓维护——下载即得完整内容，不做功能锁定。
                 </p>
                 <div class="contact-card__links">
-                  <a class="btn btn--primary" data-dl="exe" href="https://github.com/LzYita/RFERP/releases/latest" target="_blank" rel="noreferrer">下载最新版</a>
-                  <a class="btn btn--ghost" href="https://github.com/LzYita/RFERP" target="_blank" rel="noreferrer">源码仓库 ↗</a>
+                  <a class="btn btn--primary" data-dl="exe" href="https://github.com/rf-us/RFERP/releases/latest" target="_blank" rel="noreferrer">下载最新版</a>
+                  <a class="btn btn--ghost" href="https://github.com/rf-us/RFERP" target="_blank" rel="noreferrer">源码仓库 ↗</a>
                 </div>
               </div>
               <div class="contact-card">
@@ -4755,8 +4755,8 @@ body[data-mode='flow'] .ghost { display: none; }
                   模块裁剪、单据与流程调整、局域网多机落地、价格与权限口径适配——把业务场景和期望版本写进 Issue，逐条评估、按排期交付；部署求助与使用交流同样在这里。
                 </p>
                 <div class="contact-card__links">
-                  <a class="btn btn--ghost" href="https://github.com/LzYita/RFERP/issues" target="_blank" rel="noreferrer">提定制需求 ↗</a>
-                  <a class="btn btn--ghost" href="https://github.com/LzYita/RFERP/blob/main/docs/deployment.md" target="_blank" rel="noreferrer">部署文档 ↗</a>
+                  <a class="btn btn--ghost" href="https://github.com/rf-us/RFERP/issues" target="_blank" rel="noreferrer">提定制需求 ↗</a>
+                  <a class="btn btn--ghost" href="https://github.com/rf-us/RFERP/blob/main/docs/deployment.md" target="_blank" rel="noreferrer">部署文档 ↗</a>
                 </div>
               </div>
             </div>
@@ -4953,7 +4953,7 @@ function stopAutoDemo() {
   try {
     const ctl = new AbortController();
     const timer = setTimeout(() => ctl.abort(), 4500);
-    const res = await fetch('https://api.github.com/repos/LzYita/RFERP/releases/latest', {
+    const res = await fetch('https://api.github.com/repos/rf-us/RFERP/releases/latest', {
       signal: ctl.signal,
       headers: { Accept: 'application/vnd.github+json' },
     });
